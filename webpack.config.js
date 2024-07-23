@@ -1,32 +1,44 @@
-const port = process.env.PORT || 8080;
-const path = require("path");
-const HtmlWebPackPlugin = require('html-webpack-plugin')
+const path = require('path');
+const HtmlWebPackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: "./src/index.js",
+  entry: './src/index.js',
   output: {
-    path: path.join(__dirname, "/dist"),
-    filename: "main.[fullhash].js",
+    path: path.join(__dirname, 'dist'),
+    filename: '[name].bundle.js',
+    chunkFilename: '[name].chunk.js',
+    publicPath: '/',
   },
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-        },
+        use: 'babel-loader',
       },
+      // {
+      //   test: /\.css$/,
+      //   use: ['style-loader', 'css-loader'],
+      // },
+      // {
+      //   test: /\.html$/,
+      //   use: ['html-loader'],
+      // },
     ],
   },
-  plugins:[
+  plugins: [
     new HtmlWebPackPlugin({
-      template: './src/index.html'
-    })
+      template: './src/index.html',
+    }),
   ],
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
   devServer: {
-    host: "localhost",
-    port: port,
+    host: 'localhost',
+    port: process.env.PORT || 8080,
     historyApiFallback: true,
     open: true,
   },
